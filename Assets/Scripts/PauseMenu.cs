@@ -5,12 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    [SerializeField] private GameManager manager;
     public GameObject pauseMenu;
     
     public static bool isPaused;
     // Start is called before the first frame update
     void Start()
     {
+        manager = GetComponent<GameManager>();
         pauseMenu.SetActive(false);   
     }
 
@@ -23,7 +25,6 @@ public class PauseMenu : MonoBehaviour
             { 
                 ResumeGame(); 
             }
-
             else 
             { 
                 PauseGame(); 
@@ -35,13 +36,28 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenu.SetActive(true);
         Time.timeScale = 0f;
-        
+        foreach (var player in manager.players)
+        {
+            player.GetComponent<Player>().enabled = false;
+        }
+        foreach (var enemy in manager.enemies)
+        {
+            enemy.GetComponent<EnemyController>().enabled = false;
+        }
         isPaused = true;
     }
     public void ResumeGame()
     {
         pauseMenu.SetActive(false);
         Time.timeScale = 1f;
+        foreach (var player in manager.players)
+        {
+            player.GetComponent<Player>().enabled =true;
+        }
+        foreach (var enemy in manager.enemies)
+        {
+            enemy.GetComponent<EnemyController>().enabled = true;
+        }
         isPaused = false;
     }
     public void GoToMainMenu()

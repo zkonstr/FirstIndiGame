@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Wall
+  - Sword
+  - Enemy
+  - Weapon
   layers:
   - Default
   - TransparentFX
@@ -14,10 +18,10 @@ TagManager:
   - Ground
   - Platforms
   - Character
-  - 
-  - 
-  - 
-  - 
+  - PlayerAttack
+  - Enemy
+  - Player
+  - EnemyAttack
   - 
   - 
   - 

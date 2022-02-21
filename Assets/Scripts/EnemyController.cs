@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private bool forward;
+    private bool forward=true;
 
     public float Speed;
     public Animator Anim;
@@ -18,12 +19,12 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        Vector2 velo = Vector2.right;
+        Vector2 velo = Vector2.right * Speed;
 
         if (!forward)
-            velo = Vector2.left;
-
-        rb.velocity = velo * Speed;
+            velo = Vector2.left * Speed;
+        velo.y = rb.velocity.y;
+        rb.velocity = velo ;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -33,13 +34,24 @@ public class EnemyController : MonoBehaviour
             forward = !forward;
             transform.localScale = new Vector3(-transform.localScale.x, 1, 1);
         }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Suricane"))
+        if (collision.gameObject.CompareTag("Weapon"))
         {
-            Destroy(gameObject);
+            OnKilled();
         }
     }
+
+    private void OnKilled()
+    {
+
+        Debug.Log("Hit");
+        Anim.SetTrigger("IsKilled");
+        gameObject.GetComponent<Rigidbody2D>().simulated = false;
+        gameObject.GetComponent<CapsuleCollider2D>().enabled = false;
+        Destroy(gameObject, Anim.GetCurrentAnimatorStateInfo(0).length);
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        
+    }
+
 }

@@ -8,14 +8,15 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject spriteGO;
     [SerializeField] private Transform groundChecker;
     [SerializeField] private LayerMask ground;
-    [SerializeField] private CapsuleCollider2D PlayerCC;
+    
     private Animator anim;
     private SpriteRenderer sprite;
     private Rigidbody2D rb;
     private float moveX, moveY;
-    private bool grounded, attack;
-    private CapsuleCollider2D PlayerCCRight;
+    private bool grounded;
 
+    public LayerMask enemyLayer;
+    
     void Start()
     {
         anim = spriteGO.GetComponent<Animator>();
@@ -25,15 +26,15 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-
         moveX = Input.GetAxisRaw("Horizontal");
         moveY = Input.GetAxisRaw("Vertical");
-       
+
         if (moveX == -1)
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
             //spriteGO.GetComponent<SpriteRenderer>().flipX = true;        
         }
+
         if (moveX == 1)
         {
             transform.eulerAngles = new Vector3(0, 0, 0);
@@ -49,17 +50,23 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
-        if (Input.GetButtonDown("FireBySpace")&&grounded)
+        if (Input.GetButtonDown("FireBySpace") && grounded)
         {
-            anim.Play("PlayerAttack");
-
+            Attack();
         }
         CheckAnimation();
     }
+
+    //TODO find some other realization for control hit
+    private void Attack()
+    {
+        anim.SetTrigger("Attack");
+    }
+
     private void CheckAnimation()
     {
         anim.SetBool("Grounded", grounded);
-        anim.SetBool("Attack", attack);
+
         anim.SetFloat("VelocityX", Mathf.Abs(rb.velocity.x));
         anim.SetFloat("VelocityY", rb.velocity.y);
     }
